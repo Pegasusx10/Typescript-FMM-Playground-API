@@ -1,0 +1,23 @@
+{
+  "name": "typescript-fmm-playground-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "rm-rf build/&& tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pegasusx10/Typescript-FMM-Playground-API.git"
+  },
+  "author": "Paul Abraham",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Pegasusx10/Typescript-FMM-Playground-API/issues"
+  },
+  "homepage": "https://github.com/Pegasusx10/Typescript-FMM-Playground-API#readme",
+  "dependencies": {
+    "@types/node": "^18.11.18"
+  }
+}
