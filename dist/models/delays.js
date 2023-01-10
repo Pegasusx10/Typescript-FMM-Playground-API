@@ -25,14 +25,18 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose = __importStar(require("mongoose"));
 const delaysSchema = new mongoose.Schema({
-    title: {
+    code: {
+        type: Number,
+        required: true,
+    },
+    reason: {
         type: String,
         required: true,
     },
-    description: {
-        type: String,
+    time: {
+        type: Number,
         required: true,
-    },
+    }
 });
 const delays = mongoose.model("delays", delaysSchema);
 exports.default = delays;
