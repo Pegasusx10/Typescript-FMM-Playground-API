@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 
-import delays, { flightsModel } from "../models/flights";
+import flights, { flightsModel } from "../models/flights";
 
 export const createdelays: RequestHandler = async (req, res, next) => {
   try {
