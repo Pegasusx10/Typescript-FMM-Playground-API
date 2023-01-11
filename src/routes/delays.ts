@@ -1,19 +1,19 @@
 import { Router } from "express";
 import {
-  createdelays,
-  getdelays,
-  updatedelays,
-  deletedelays,
+  createDelays,
+  getDelays,
+  updateDelays,
+  deleteDelays,
 } from "../controller/delays";
 
 const router = Router();
 
-router.post("/", createdelays);
+router.post("/", createDelays);
 
-router.get("/", getdelays);
+router.get("/", getDelays);
 
-router.patch("/:id", updatedelays);
+router.patch("/:id", updateDelays);
 
-router.delete("/:id", deletedelays);
+router.delete("/:id", deleteDelays);
 
 export default router;
