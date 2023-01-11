@@ -9,7 +9,7 @@ export const createDelays: RequestHandler = async (req, res, next) => {
     var Delays = await delays.create(data);
     return res
       .status(200)
-      .json({ message: "delays created successfully", data: Delays });
+      .json({ message: "Delays created successfully", data: Delays });
   } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
@@ -30,7 +30,7 @@ export const updateDelays: RequestHandler = async (req, res, next) => {
     var Delays = await delays.findByIdAndUpdate(id, req.body, { new: true });
     return res
       .status(200)
-      .json({ message: "delays updated successfully!", data: Delays });
+      .json({ message: "Delays updated successfully!", data: Delays });
   } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
@@ -40,8 +40,8 @@ export const deleteDelays: RequestHandler = async (req, res, next) => {
   try {
     const { id } = req.params;
     var isDeleted = await delays.findByIdAndDelete(id);
-    if (!isDeleted) throw new Error("Failed to delete todo");
-    return res.status(200).json({ message: "Todo deleted successfully!" });
+    if (!isDeleted) throw new Error("Failed to delete delay!");
+    return res.status(200).json({ message: "Delay deleted successfully!" });
   } catch (error: any) {
     return res.status(500).json({ message: error.message });
   }
