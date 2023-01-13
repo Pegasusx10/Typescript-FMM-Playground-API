@@ -62,5 +62,5 @@ const flightsSchema = new mongoose.Schema({
         required: true,
     },
 });
-const flights = mongoose.model("delays", flightsSchema);
+const flights = mongoose.model("flights", flightsSchema);
 exports.default = flights;

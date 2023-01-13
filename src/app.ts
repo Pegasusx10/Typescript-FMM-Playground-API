@@ -28,7 +28,7 @@ app.use(
 );
 
 db.connect("mongodb+srv://Pegasusx10:pegasus123@cluster0.749smlf.mongodb.net/?retryWrites=true&w=majority", () => {
-  console.log("Database connected");
+  console.log("Database connected successfully");
 });
 
 app.listen(5000);
