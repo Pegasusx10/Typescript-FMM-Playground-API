@@ -4,16 +4,30 @@ import passengers, { passengersModel } from "../models/passengers";
 
 export const createPassengers: RequestHandler = async (req, res, next) => {
   try {
-    const data: passengersModel = req.body;
-    console.log("Data", data);
-    var Passengers = await passengers.create(data);
-    return res
-      .status(200)
-      .json({ message: "passengers created successfully", data: Passengers });
-  } catch (error: any) {
-    return res.status(500).json({ message: error.message });
+//     const data: passengersModel = req.body;
+//     console.log("Data", data);
+//     var Passengers = await passengers.create(data);
+//     return res
+//       .status(200)
+//       .json({ message: "passengers created successfully", data: Passengers });
+//   } catch (error: any) {
+//     return res.status(500).json({ message: error.message });
+//   }
+// };
+const newPassenger = new passengers({
+  firstName: req.body.firstName,
+  lastName: req.body.lastName,
+  age: req.body.age,
+  passportNo: req.body.passportNo,
+  country: req.body.country
+})
+try {
+  const freshPassenger = await newPassenger.save()
+  res.status(201).json(freshPassenger)
+  } catch (err) {
+    res.status(404).json(`The Passenger you're looking for does not exist!`)
   }
-};
+}
 
 export const getPassengers: RequestHandler = async (req, res, next) => {
   try {

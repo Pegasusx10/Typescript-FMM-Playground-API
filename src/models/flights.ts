@@ -65,7 +65,7 @@ const flightsSchema = new mongoose.Schema({
         type: Number,
         required: true,
       },
-        originpassengers: {
+        passengers: {
         type: Number,
         required: true,
       },

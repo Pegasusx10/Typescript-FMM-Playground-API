@@ -13,7 +13,7 @@ app.use(urlencoded({ extended: true }));
 
 app.use("/fmm/api/flights", flightsRoutes);
 app.use("/fmm/api/delays", delaysRoutes);
-app.use("/fmm/api/passenger", passengersRoutes);
+app.use("/fmm/api/passengers", passengersRoutes);
 
 
 app.use(

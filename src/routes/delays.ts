@@ -8,7 +8,7 @@ import {
 
 const router = Router();
 
-router.post("/:id", createDelays);
+router.post("/", createDelays);
 
 router.get("/", getDelays);
 
