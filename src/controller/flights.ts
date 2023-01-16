@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-const queryCondition = require('../utils/logic')
+const queryCondition = require('../utils/flightValidation')
 import flights, { flightsModel } from "../models/flights";
 
 
@@ -41,20 +41,11 @@ try {
   }
   }
 
-// export const getFlights: RequestHandler = async (req, res, next) => {
-//   try {
-//     var Flights = await flights.find({});
-//     return res.status(200).json({ message: "All flights!", data: Flights });
-//   } catch (error: any) {
-//     return res.status(500).json({ message: error.message });
-//   }
-// };
-
 // Get a single flight 
 export const getFlight: RequestHandler = async (req, res) => {
   try{
     const Flights = await flights.findById(req.params.id)
-    .populate('passengers')
+    // .populate('passengers')
      res.send(Flights)
     } catch (err) {
       res.status(404).json(`The Flight you're looking for does not exist!`)
@@ -63,16 +54,6 @@ export const getFlight: RequestHandler = async (req, res) => {
 
 // Update flight by ID
 export const updateFlights: RequestHandler = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     var Flights = await flights.findByIdAndUpdate(id, req.body, { new: true });
-//     return res
-//       .status(200)
-//       .json({ message: "delays updated successfully!", data: Flights });
-//   } catch (error: any) {
-//     return res.status(500).json({ message: error.message });
-//   }
-// };
 try{
   const updatedflights = flights(req.params.id, req.body);
   res.send(updatedflights);
@@ -81,16 +62,8 @@ try{
     }
 }
 
+// Delete a single Flight
 export const deleteFlights: RequestHandler = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     var isDeleted = await flights.findByIdAndDelete(id);
-//     if (!isDeleted) throw new Error("Failed to delete todo");
-//     return res.status(200).json({ message: "Todo deleted successfully!" });
-//   } catch (error: any) {
-//     return res.status(500).json({ message: error.message });
-//   }
-// };
 try {
   const flightId = await flights.findByIdAndDelete(req.params.id)
   res.send(`The Flight has been deleted from database successfully!`)

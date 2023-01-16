@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-
+const queryCondition = require('../utils/delayValidation')
 import delays, { delaysModel } from "../models/delays";
 import flights from "../models/flights";
 
@@ -43,7 +43,7 @@ try {
     .skip(pageNumber - 1)
     res.status(200).send(Delays)
   } catch (err) {
-    next(err)
+    res.status(404).json(`Delay does not exist!`)
   }
 };
 
