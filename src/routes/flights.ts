@@ -2,8 +2,9 @@ import { Router } from "express";
 import {
   createFlights,
   getFlights,
+  getFlight,
   updateFlights,
-  deleteFlights,
+  deleteFlights
 } from "../controller/flights";
 
 const router = Router();
@@ -11,6 +12,8 @@ const router = Router();
 router.post("/", createFlights);
 
 router.get("/", getFlights);
+
+router.get("/", getFlight);
 
 router.patch("/:id", updateFlights);
 
