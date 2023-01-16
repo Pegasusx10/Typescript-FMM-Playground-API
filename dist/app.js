@@ -19,6 +19,7 @@ app.use((0, body_parser_1.urlencoded)({ extended: true }));
 app.use("/fmm/api/flights", flights_1.default);
 app.use("/fmm/api/delays", delays_1.default);
 app.use("/fmm/api/passengers", passengers_1.default);
+app.use("/");
 app.use((err, req, res) => {
     res.status(500).json({ message: err.message });
 });

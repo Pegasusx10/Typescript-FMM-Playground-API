@@ -6,6 +6,7 @@ const router = (0, express_1.Router)();
 router.post("/", flights_1.createFlights);
 router.get("/", flights_1.getFlights);
 router.get("/", flights_1.getFlight);
+router.get("/show_cancelled", flights_1.cancelledFlights);
 router.patch("/:id", flights_1.updateFlights);
 router.delete("/:id", flights_1.deleteFlights);
 exports.default = router;

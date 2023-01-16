@@ -12,9 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteFlights = exports.updateFlights = exports.getFlight = exports.getFlights = exports.createFlights = void 0;
-const queryCondition = require('../utils/flightValidation');
+exports.deleteFlights = exports.updateFlights = exports.cancelledFlights = exports.getFlight = exports.getFlights = exports.createFlights = void 0;
 const flights_1 = __importDefault(require("../models/flights"));
+const queryCondition = require('../utils/flightValidation');
 // Create a flight
 const createFlights = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const newFlight = new flights_1.default({
@@ -74,6 +74,17 @@ const getFlight = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getFlight = getFlight;
+// endpoint for cancelled Flights
+const cancelledFlights = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const Flights = yield flights_1.default.find({ iropStatus: 'CX' });
+        res.json(Flights);
+    }
+    catch (err) {
+        res.status(500).json(`The endpoint URL does not exsist!`);
+    }
+});
+exports.cancelledFlights = cancelledFlights;
 // Update flight by ID
 const updateFlights = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
