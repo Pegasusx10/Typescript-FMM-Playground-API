@@ -4,7 +4,7 @@ import flights, { flightsModel } from "../models/flights";
 
 
 // Create a flight
-export const createFlights: RequestHandler = async (req, res, next) => {
+export const createFlights: RequestHandler = async (req, res) => {
   const newFlight = new flights({
     flightNumber: req.body.flightNumber,
     tailNumber: req.body.tailNumber,
@@ -25,7 +25,7 @@ try {
 }
 
 // Get all flights
-export const getFlights: RequestHandler = async (req, res, next) => {
+export const getFlights: RequestHandler = async (req, res) => {
 try {
   const pageSize = parseInt(req.query.pageSize) || 0
   const pageNumber = parseInt(req.query.pageNumber) || 1
@@ -34,7 +34,7 @@ try {
   .find(queries)
   .limit(pageSize)
   .skip(pageNumber - 1)
-  // .populate('passengers')
+  .populate('passengers')
   res.status(200).send(Flights)
   } catch (error: any) {
   return res.status(500).json({ message: error.message });
@@ -51,10 +51,10 @@ try {
 // };
 
 // Get a single flight 
-export const getFlight: RequestHandler = async (req, res, next) => {
+export const getFlight: RequestHandler = async (req, res) => {
   try{
     const Flights = await flights.findById(req.params.id)
-    // .populate('passengers')
+    .populate('passengers')
      res.send(Flights)
     } catch (err) {
       res.status(404).json(`The Flight you're looking for does not exist!`)
@@ -62,7 +62,7 @@ export const getFlight: RequestHandler = async (req, res, next) => {
 };
 
 // Update flight by ID
-export const updateFlights: RequestHandler = async (req, res, next) => {
+export const updateFlights: RequestHandler = async (req, res) => {
 //   try {
 //     const { id } = req.params;
 //     var Flights = await flights.findByIdAndUpdate(id, req.body, { new: true });
@@ -81,7 +81,7 @@ try{
     }
 }
 
-export const deleteFlights: RequestHandler = async (req, res, next) => {
+export const deleteFlights: RequestHandler = async (req, res) => {
 //   try {
 //     const { id } = req.params;
 //     var isDeleted = await flights.findByIdAndDelete(id);
@@ -95,6 +95,6 @@ try {
   const flightId = await flights.findByIdAndDelete(req.params.id)
   res.send(`The Flight has been deleted from database successfully!`)
 } catch (err) {
-  res.status(404).json(`Student you're looking for does not exist!`)
+  res.status(404).json(`The Flight you're looking for does not exist!`)
 }
 }

@@ -2,7 +2,7 @@ import { RequestHandler } from "express";
 
 import passengers, { passengersModel } from "../models/passengers";
 
-export const createPassengers: RequestHandler = async (req, res, next) => {
+export const createPassengers: RequestHandler = async (req, res) => {
   try {
 //     const data: passengersModel = req.body;
 //     console.log("Data", data);
@@ -29,7 +29,7 @@ try {
   }
 }
 
-export const getPassengers: RequestHandler = async (req, res, next) => {
+export const getPassengers: RequestHandler = async (req, res) => {
   try {
     var Passengers = await passengers.find({});
     return res.status(200).json({ message: "All passengers!", data: Passengers });
@@ -38,7 +38,7 @@ export const getPassengers: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const updatePassengers: RequestHandler = async (req, res, next) => {
+export const updatePassengers: RequestHandler = async (req, res) => {
   try {
     const { id } = req.params;
     var Passengers = await passengers.findByIdAndUpdate(id, req.body, { new: true });
@@ -50,7 +50,7 @@ export const updatePassengers: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const deletePassengers: RequestHandler = async (req, res, next) => {
+export const deletePassengers: RequestHandler = async (req, res) => {
   try {
     const { id } = req.params;
     var isDeleted = await passengers.findByIdAndDelete(id);
