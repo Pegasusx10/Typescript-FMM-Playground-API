@@ -12,55 +12,80 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteFlights = exports.updateFlights = exports.getFlights = exports.createFlights = void 0;
+exports.deleteFlights = exports.updateFlights = exports.getFlight = exports.getFlights = exports.createFlights = void 0;
+const queryCondition = require('../utils/flightValidation');
 const flights_1 = __importDefault(require("../models/flights"));
-const createFlights = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+// Create a flight
+const createFlights = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const newFlight = new flights_1.default({
+        flightNumber: req.body.flightNumber,
+        tailNumber: req.body.tailNumber,
+        origin: req.body.origin,
+        destination: req.body.destination,
+        iropStatus: req.body.iropStatus,
+        totalSeats: req.body.totalSeats,
+        passengers: req.body.passengers,
+        hasBusinessClass: req.body.hasBusinessClass,
+        delay: req.body.delay,
+    });
     try {
-        const data = req.body;
-        console.log("Data", data);
-        var Flights = yield flights_1.default.create(data);
-        return res
-            .status(200)
-            .json({ message: "delays created successfully", data: Flights });
+        const freshFlights = yield newFlight.save();
+        res.status(201).json(freshFlights);
     }
-    catch (error) {
-        return res.status(500).json({ message: error.message });
+    catch (err) {
+        res.status(404).json(`The Flight you're looking for does not exist!`);
     }
 });
 exports.createFlights = createFlights;
-const getFlights = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+// Get all flights
+const getFlights = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        var Flights = yield flights_1.default.find({});
-        return res.status(200).json({ message: "All flights!", data: Flights });
+        const pageSize = parseInt(req.query.pageSize) || 0;
+        const pageNumber = parseInt(req.query.pageNumber) || 1;
+        const queries = queryCondition(req.query);
+        const Flights = yield flights_1.default
+            .find(queries)
+            .limit(pageSize)
+            .skip(pageNumber - 1)
+            .populate('passengers');
+        res.status(200).send(Flights);
     }
     catch (error) {
         return res.status(500).json({ message: error.message });
     }
 });
 exports.getFlights = getFlights;
-const updateFlights = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+// Get a single flight 
+const getFlight = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id } = req.params;
-        var Flights = yield flights_1.default.findByIdAndUpdate(id, req.body, { new: true });
-        return res
-            .status(200)
-            .json({ message: "delays updated successfully!", data: Flights });
+        const Flights = yield flights_1.default.findById(req.params.id);
+        // .populate('passengers')
+        res.send(Flights);
     }
-    catch (error) {
-        return res.status(500).json({ message: error.message });
+    catch (err) {
+        res.status(404).json(`The Flight you're looking for does not exist!`);
+    }
+});
+exports.getFlight = getFlight;
+// Update flight by ID
+const updateFlights = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const updatedflights = (0, flights_1.default)(req.params.id, req.body);
+        res.send(updatedflights);
+    }
+    catch (err) {
+        res.status(500).send(`An error occurred while updating the record`);
     }
 });
 exports.updateFlights = updateFlights;
-const deleteFlights = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+// Delete a single Flight
+const deleteFlights = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id } = req.params;
-        var isDeleted = yield flights_1.default.findByIdAndDelete(id);
-        if (!isDeleted)
-            throw new Error("Failed to delete todo");
-        return res.status(200).json({ message: "Todo deleted successfully!" });
+        const flightId = yield flights_1.default.findByIdAndDelete(req.params.id);
+        res.send(`The Flight has been deleted from database successfully!`);
     }
-    catch (error) {
-        return res.status(500).json({ message: error.message });
+    catch (err) {
+        res.status(404).json(`The Flight you're looking for does not exist!`);
     }
 });
 exports.deleteFlights = deleteFlights;

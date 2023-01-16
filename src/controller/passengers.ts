@@ -23,20 +23,28 @@ export const createPassengers: RequestHandler = async (req, res) => {
 
 // Get all Passengers
 export const getPassengers: RequestHandler = async (req, res) => {
-try {
-  const pageSize = parseInt(req.query.pageSize) || 0
-  const pageNumber = parseInt(req.query.pageNumber) || 1
-  const queries = queryCondition(req.query)
-  const Flights = await flights
-  .find(queries)
-  .limit(pageSize)
-  .skip(pageNumber - 1)
-  // .populate('passengers')
-  res.status(200).send(Flights)
-  } catch (error: any) {
-  return res.status(500).json(`The Passenger you are looking for does not exsist!`);
-  }
-};
+  try {
+    let pageSize = req.query.pageSize;
+    let pageNumber = req.query.pageNumber;
+    if (typeof pageSize !== 'string') {
+      pageSize = "0";
+    }
+    if (typeof pageNumber !== 'string') {
+      pageNumber = "1";
+    }
+    const pageSizeValue = parseInt(pageSize, 10) || 0;
+    const pageNumberValue = parseInt(pageNumber, 10) || 1;
+    const queries = queryCondition(req.query)
+    const Passengers = await passengers
+      .find(queries)
+      .limit(pageSizeValue)
+      .skip((pageNumberValue - 1) * pageSizeValue)
+      res.status(200).json(Passengers)
+    } catch (err) {
+      res.status(404).json({ message: "The Delay you are looking for does not exist!" })
+    }
+  };
+  
 
 // get a single Passenger
 export const getPassenger: RequestHandler = async (req, res) => {

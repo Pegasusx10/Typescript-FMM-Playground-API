@@ -36,6 +36,12 @@ const passengersSchema = new mongoose.Schema({
     age: {
         type: String,
         required: true,
+        validate: {
+            validator: function (value) {
+                return value < 90;
+            },
+            message: 'Age must be below 90.'
+        }
     },
     passportNo: {
         type: Number,
@@ -44,7 +50,7 @@ const passengersSchema = new mongoose.Schema({
     country: {
         type: String,
         required: true,
-    },
+    }
 });
 const passengers = mongoose.model("passengers", passengersSchema);
 exports.default = passengers;

@@ -33,19 +33,28 @@ try {
 
 // get all  Delay
 export const getDelays: RequestHandler = async (req, res) => {
-try {
-  const pageSize = parseInt(req.query.pageSize) || 0
-  const pageNumber = parseInt(req.query.pageNumber) || 1 
-  const queries = queryCondition(req.query)
-  const Delays = await delays
-    .find(queries)
-    .limit(pageSize)
-    .skip(pageNumber - 1)
-    res.status(200).send(Delays)
-  } catch (err) {
-    res.status(404).json(`Delay does not exist!`)
-  }
-};
+  try {
+    let pageSize = req.query.pageSize;
+    let pageNumber = req.query.pageNumber;
+    if (typeof pageSize !== 'string') {
+      pageSize = "0";
+    }
+    if (typeof pageNumber !== 'string') {
+      pageNumber = "1";
+    }
+    const pageSizeValue = parseInt(pageSize, 10) || 0;
+    const pageNumberValue = parseInt(pageNumber, 10) || 1;
+    const queries = queryCondition(req.query)
+    const Delays = await delays
+      .find(queries)
+      .limit(pageSizeValue)
+      .skip((pageNumberValue - 1) * pageSizeValue)
+      res.status(200).json(Delays)
+    } catch (err) {
+      res.status(404).json({ message: "The Delay you are looking for does not exist!" })
+    }
+  };
+  
 
 //get a single Delay 
 export const getDelay: RequestHandler = async (req, res) => {
