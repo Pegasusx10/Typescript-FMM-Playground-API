@@ -13,7 +13,7 @@ export const createFlights: RequestHandler = async (req, res) => {
     iropStatus: req.body.iropStatus,
     totalSeats: req.body.totalSeats,
     passengers: req.body.passengers,
-    hasBusinessClass: req.body.hasBusinessClass ,
+    hasBusinessClass: req.body.hasBusinessClass,
     delay: req.body.delay,
 })
 try {
