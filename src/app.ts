@@ -3,10 +3,13 @@ import db from "mongoose";
 import flightsRoutes from "./routes/flights";
 import delaysRoutes from "./routes/delays";
 import passengersRoutes from "./routes/passengers";
+import connection from "./config.ts/dbConnection"
 import { json, urlencoded } from "body-parser";
-
+const dotenv = require("dotenv")
+const PORT = 5000
 const app = express();
 
+dotenv.config();
 app.use(json());
 
 app.use(urlencoded({ extended: true }));
@@ -27,8 +30,16 @@ app.use(
   }
 );
 
+app.use('*', (req,res) => {
+  const err = new Error(`The Requested URL is Invalid!`)
+  res.status(404).json({        
+      message: err.message       
+  })
+})
+
+
 db.connect("mongodb+srv://Pegasusx10:pegasus123@cluster0.749smlf.mongodb.net/?retryWrites=true&w=majority", () => {
   console.log("Database connected successfully");
 });
 
-app.listen(5000);
+app.listen(PORT, () => console.log('Server Started'))
