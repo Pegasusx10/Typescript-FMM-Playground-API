@@ -40,18 +40,25 @@ exports.createFlights = createFlights;
 // Get all flights
 const getFlights = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const pageSize = parseInt(req.query.pageSize) || 0;
-        const pageNumber = parseInt(req.query.pageNumber) || 1;
+        let pageSize = req.query.pageSize;
+        let pageNumber = req.query.pageNumber;
+        if (typeof pageSize !== 'string') {
+            pageSize = "0";
+        }
+        if (typeof pageNumber !== 'string') {
+            pageNumber = "1";
+        }
+        const pageSizeValue = parseInt(pageSize, 10) || 0;
+        const pageNumberValue = parseInt(pageNumber, 10) || 1;
         const queries = queryCondition(req.query);
-        const Flights = yield flights_1.default
+        const Flight = yield flights_1.default
             .find(queries)
-            .limit(pageSize)
-            .skip(pageNumber - 1)
-            .populate('passengers');
-        res.status(200).send(Flights);
+            .limit(pageSizeValue)
+            .skip((pageNumberValue - 1) * pageSizeValue);
+        res.status(200).json(Flight);
     }
-    catch (error) {
-        return res.status(500).json({ message: error.message });
+    catch (err) {
+        res.status(404).json({ message: "The Flight you are looking for does not exist!" });
     }
 });
 exports.getFlights = getFlights;
@@ -70,7 +77,7 @@ exports.getFlight = getFlight;
 // Update flight by ID
 const updateFlights = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const updatedflights = (0, flights_1.default)(req.params.id, req.body);
+        const updatedflights = new flights_1.default(req.params.id, req.body);
         res.send(updatedflights);
     }
     catch (err) {

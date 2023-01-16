@@ -4,7 +4,8 @@ import {
   getFlights,
   getFlight,
   updateFlights,
-  deleteFlights
+  deleteFlights,
+  cancelledFlights
 } from "../controller/flights";
 
 const router = Router();
@@ -14,6 +15,8 @@ router.post("/", createFlights);
 router.get("/", getFlights);
 
 router.get("/", getFlight);
+
+router.get("/show_cancelled", cancelledFlights);
 
 router.patch("/:id", updateFlights);
 

@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
+import flights from "../models/flights";
 const queryCondition = require('../utils/flightValidation')
-import flights, { flightsModel } from "../models/flights";
 
 
 // Create a flight
@@ -26,20 +26,28 @@ try {
 
 // Get all flights
 export const getFlights: RequestHandler = async (req, res) => {
-try {
-  const pageSize = parseInt(req.query.pageSize) || 0
-  const pageNumber = parseInt(req.query.pageNumber) || 1
-  const queries = queryCondition(req.query)
-  const Flights = await flights
-  .find(queries)
-  .limit(pageSize)
-  .skip(pageNumber - 1)
-  .populate('passengers')
-  res.status(200).send(Flights)
-  } catch (error: any) {
-  return res.status(500).json({ message: error.message });
-  }
-  }
+  try {
+    let pageSize = req.query.pageSize;
+    let pageNumber = req.query.pageNumber;
+    if (typeof pageSize !== 'string') {
+      pageSize = "0";
+    }
+    if (typeof pageNumber !== 'string') {
+      pageNumber = "1";
+    }
+    const pageSizeValue = parseInt(pageSize, 10) || 0;
+    const pageNumberValue = parseInt(pageNumber, 10) || 1;
+    const queries = queryCondition(req.query)
+    const Flight = await flights
+      .find(queries)
+      .limit(pageSizeValue)
+      .skip((pageNumberValue - 1) * pageSizeValue)
+      res.status(200).json(Flight)
+    } catch (err) {
+      res.status(404).json({ message: "The Flight you are looking for does not exist!" })
+    }
+  };
+  
 
 // Get a single flight 
 export const getFlight: RequestHandler = async (req, res) => {
@@ -52,10 +60,20 @@ export const getFlight: RequestHandler = async (req, res) => {
     }
 };
 
+// endpoint for cancelled Flights
+export const cancelledFlights: RequestHandler = async (req, res) => {
+  try {
+      const Flights = await flights.find({ iropStatus: 'CX' });
+      res.json(Flights);
+  } catch (err) {
+      res.status(500).json(`The endpoint URL does not exsist!`);
+  }
+};
+
 // Update flight by ID
 export const updateFlights: RequestHandler = async (req, res) => {
 try{
-  const updatedflights = flights(req.params.id, req.body);
+  const updatedflights = new flights(req.params.id, req.body);
   res.send(updatedflights);
     } catch (err) {
   res.status(500).send( `An error occurred while updating the record` )

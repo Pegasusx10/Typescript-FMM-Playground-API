@@ -13,7 +13,7 @@ router.post("/", createDelays);
 
 router.get("/", getDelays);
 
-router.get("/", getDelay);
+router.get("/:id", getDelay);
 
 router.patch("/:id", updateDelays);
 
