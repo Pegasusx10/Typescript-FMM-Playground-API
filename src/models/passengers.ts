@@ -24,27 +24,35 @@ export interface passengersModel {
     required: true,
   };
 }
+
 const passengersSchema = new mongoose.Schema({
-    firstName: {
-        type: String,
-        required: true,
-      },
-        lastName: {
-        type: String,
-        required: true,
-      },
-        age: {
-        type: String,
-        required: true,
-      },
-        passportNo: {
-        type: Number,
-        required: true,
-      },
-        country: {
-        type: String,
-        required: true,
-      },
+  firstName: {
+      type: String,
+      required: true,
+  },
+  lastName: {
+      type: String,
+      required: true,
+  },
+  age: {
+      type: String,
+      required: true,
+      validate: {
+          validator: function(value: any) {
+              return value < 90;
+          },
+          message: 'Age must be below 90.'
+      }
+  },
+  passportNo: {
+      type: Number,
+      required: true,
+  },
+  country: {
+      type: String,
+      required: true,
+  }
 });
+
 const passengers: Model<passengersType> = mongoose.model < passengersType > ("passengers", passengersSchema);
 export default passengers;
