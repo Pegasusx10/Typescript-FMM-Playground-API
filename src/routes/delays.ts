@@ -9,14 +9,14 @@ import {
 
 const router = Router();
 
-router.post("/", createDelays);
+router.post("/delays", createDelays);
 
-router.get("/", getDelays);
+router.get("/delays", getDelays);
 
-router.get("/:id", getDelay);
+router.get("/delay/:id", getDelay);
 
-router.patch("/:id", updateDelays);
+router.patch("/delay/:id", updateDelays);
 
-router.delete("/:id", deleteDelays);
+router.delete("/delay/:id", deleteDelays);
 
 export default router;
