@@ -10,16 +10,16 @@ import {
 
 const router = Router();
 
-router.post("/", createFlights);
+router.post("/flights", createFlights);
 
-router.get("/", getFlights);
+router.get("/flights", getFlights);
 
-router.get("/", getFlight);
+router.get("/flight/:id", getFlight);
 
-router.get("/show_cancelled", cancelledFlights);
+router.get("/flights/show_cancelled", cancelledFlights);
 
-router.patch("/:id", updateFlights);
+router.patch("/flight/:id", updateFlights);
 
-router.delete("/:id", deleteFlights);
+router.delete("/flight/:id", deleteFlights);
 
 export default router;
