@@ -31,10 +31,10 @@ export const getFlights: RequestHandler = async (req, res) => {
     let pageNumber = req.query.pageNumber;
     if (typeof pageSize !== 'string') {
       pageSize = "0";
-    }
+    };
     if (typeof pageNumber !== 'string') {
       pageNumber = "1";
-    }
+    };
     const pageSizeValue = parseInt(pageSize, 10) || 0;
     const pageNumberValue = parseInt(pageNumber, 10) || 1;
     const queries = queryCondition(req.query)
@@ -42,9 +42,11 @@ export const getFlights: RequestHandler = async (req, res) => {
       .find(queries)
       .limit(pageSizeValue)
       .skip((pageNumberValue - 1) * pageSizeValue)
+      .populate('passengers')
+      .populate('delay')
       res.status(200).json(Flight)
     } catch (err) {
-      res.status(404).json({ message: "The Flight you are looking for does not exist!" })
+      res.status(404).json({ message: "The Flight you are looking for does not exist!" });
     }
   };
   
@@ -53,10 +55,11 @@ export const getFlights: RequestHandler = async (req, res) => {
 export const getFlight: RequestHandler = async (req, res) => {
   try{
     const Flights = await flights.findById(req.params.id)
-    // .populate('passengers')
+    .populate('passengers')
+    .populate('delays')
      res.send(Flights)
     } catch (err) {
-      res.status(404).json(`The Flight you're looking for does not exist!`)
+      res.status(404).json(`The Flight you're looking for does not exist!`);
     }
 };
 
@@ -78,7 +81,7 @@ try{
     } catch (err) {
   res.status(500).send( `An error occurred while updating the record` )
     }
-}
+};
 
 // Delete a single Flight
 export const deleteFlights: RequestHandler = async (req, res) => {
@@ -88,4 +91,4 @@ try {
 } catch (err) {
   res.status(404).json(`The Flight you're looking for does not exist!`)
 }
-}
+};
