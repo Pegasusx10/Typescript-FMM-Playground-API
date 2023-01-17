@@ -13,7 +13,7 @@ const db = mongoose.connection;
 app.use(json());
 app.use(urlencoded({ extended: true }));
 
-app.use("/fmm/api/flights", flightsRoutes);
+app.use("/fmm/api", flightsRoutes);
 app.use("/fmm/api/delays", delaysRoutes);
 app.use("/fmm/api/passengers", passengersRoutes);
 
@@ -28,7 +28,7 @@ app.use(
 );
 
 app.use('*', (req, res) => {
-  const err = new Error(`The Requested URL is Invalid!`)
+  const err = new Error(`The requested endpoint does not exist. Please check the URL and try again.`)
   res.status(404).json({        
       message: err.message       
   })
