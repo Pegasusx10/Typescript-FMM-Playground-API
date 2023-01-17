@@ -1,45 +1,33 @@
 import { RequestHandler } from "express";
 const queryCondition = require('../utils/delayValidation')
 import delays, { delaysModel } from "../models/delays";
-import flights from "../models/flights";
+
 
 // Create a single Delay
 export const createDelays: RequestHandler = async (req, res) => {
-const newDelay = new delays({
-  code: req.body.code,
-  reason: req.body.reason,
-  time: req.body.time
-})
-// Validate firstName & lastName to be unique
-const firstName = req.body.firstName;
-const lastName = req.body.lastName;
-delays.findOne({ firstName: firstName, lastName: lastName }, (err: any, Delays: any) => {
-  if (err) {
-    return;
-  }
-  if (delays) {
-    res.send({ error: 'The delay cannot be added since the delay already exsist in the database' });
-  } else {
-    res.send({ success: 'The delay has been successfully added to the database'});
-  }
-});
-try {
-  const freshDelay = await newDelay.save()
-  res.status(201).json(freshDelay)
+  const newDelay = new delays({
+    code: req.body.code,
+    reason: req.body.reason,
+    time: req.body.time
+  });
+
+  try {
+    const freshDelay = await newDelay.save();
+    res.status(201).send(freshDelay);
   } catch (err) {
-    res.status(404).json(`The Delay you're looking for does not exist!`)
+    res.status(404).send(`The Delay you're looking for does not exist!`);
   }
-}
+};
 
 // get all  Delay
 export const getDelays: RequestHandler = async (req, res) => {
   try {
     let pageSize = req.query.pageSize;
     let pageNumber = req.query.pageNumber;
-    if (typeof pageSize !== 'string') {
+    if (typeof pageSize !== 'number') {
       pageSize = "0";
     }
-    if (typeof pageNumber !== 'string') {
+    if (typeof pageNumber !== 'number') {
       pageNumber = "1";
     }
     const pageSizeValue = parseInt(pageSize, 10) || 0;
@@ -49,39 +37,38 @@ export const getDelays: RequestHandler = async (req, res) => {
       .find(queries)
       .limit(pageSizeValue)
       .skip((pageNumberValue - 1) * pageSizeValue)
-      res.status(200).json(Delays)
+      res.status(200).send(Delays)
     } catch (err) {
-      res.status(404).json({ message: "The Delay you are looking for does not exist!" })
+      res.status(404).send({ message: "The Delay you are looking for does not exist!" })
     }
   };
   
-
-//get a single Delay 
+// Get a single Delay
 export const getDelay: RequestHandler = async (req, res) => {
-  try{
-    const delayInfo = await delays.findById(req.params.id)
-     res.send(delayInfo)
-    } catch (err) {
-      res.status(404).json(`Delay does not exist!`)
-    }
+  try {
+    const delayInfo = await delays.findById(req.params.id) as delaysModel;
+    res.send(delayInfo);
+  } catch (err) {
+    res.status(404).send(`Delay does not exist!`);
+  }
 };
 
-// update a single Delay
+// Update a single Delay
 export const updateDelays: RequestHandler = async (req, res) => {
-  try{
-    const updatedRecord = new delays(req.params.id, req.body);
+  try {
+    const updatedRecord = await delays.findByIdAndUpdate(req.params.id, req.body, { new: true }) as delaysModel;
     res.send(updatedRecord);
-      } catch (err) {
-    res.status(500).send( `An error occurred while updating the record` )
-      }
-  };
+  } catch (err) {
+    res.status(500).send({ message: `An error occurred while updating the record` });
+  }
+};
   
-// Delete a single Delay 
+// Delete a single Delay
 export const deleteDelays: RequestHandler = async (req, res) => {
   try {
-    const delayId = await flights.findByIdAndDelete(req.params.id)
-    res.send(`The delay has been deleted has been successfully deleted!`)
+    const delayId = await delays.findByIdAndDelete(req.params.id);
+    res.send(`The delay has been deleted successfully!`);
   } catch (err) {
-    res.status(404).json(`The Delay you are looking for does not exsist!`)
+    res.status(404).send({ message: `The Delay you are looking for does not exist!` });
   }
 };
