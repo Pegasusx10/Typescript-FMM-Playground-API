@@ -13,11 +13,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteDelays = exports.updateDelays = exports.getDelay = exports.getDelays = exports.createDelays = void 0;
-const queryCondition = require('../utils/delayValidation');
+const queryCondition = require('../utils/queryLogic');
 const delays_1 = __importDefault(require("../models/delays"));
 // Create a single Delay
 const createDelays = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const newDelay = new delays_1.default({
+    const newDelay = yield new delays_1.default({
         code: req.body.code,
         reason: req.body.reason,
         time: req.body.time

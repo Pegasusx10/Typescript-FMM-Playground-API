@@ -6,15 +6,11 @@ const queryCondition = require('../utils/queryLogic')
 // Create a Passenger
 export const createPassengers: RequestHandler = async (req, res) => {
   const newPassengers = new Passengers({
-    flightNumber: req.body.flightNumber,
-    tailNumber: req.body.tailNumber,
-    origin: req.body.origin,
-    destination: req.body.destination,
-    iropStatus: req.body.iropStatus,
-    totalSeats: req.body.totalSeats,
-    passengers: req.body.passengers,
-    hasBusinessClass: req.body.hasBusinessClass,
-    delay: req.body.delay,
+    firstName:  req.body.firstName,
+    lastName: req.body.lastName,
+    age: req.body.age,
+    passportNo: req.body.passportNo,
+    country: req.body.country,
   });
   try {
     const freshPassengers = await newPassengers.save();

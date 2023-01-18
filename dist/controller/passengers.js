@@ -14,19 +14,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deletePassengers = exports.updatePassengers = exports.getPassenger = exports.getPassengers = exports.createPassengers = void 0;
 const passengers_1 = __importDefault(require("../models/passengers"));
-const queryCondition = require('../utils/flightValidation');
+const queryCondition = require('../utils/queryLogic');
 // Create a Passenger
 const createPassengers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const newPassengers = new passengers_1.default({
-        flightNumber: req.body.flightNumber,
-        tailNumber: req.body.tailNumber,
-        origin: req.body.origin,
-        destination: req.body.destination,
-        iropStatus: req.body.iropStatus,
-        totalSeats: req.body.totalSeats,
-        passengers: req.body.passengers,
-        hasBusinessClass: req.body.hasBusinessClass,
-        delay: req.body.delay,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        age: req.body.age,
+        passportNo: req.body.passportNo,
+        country: req.body.country,
     });
     try {
         const freshPassengers = yield newPassengers.save();

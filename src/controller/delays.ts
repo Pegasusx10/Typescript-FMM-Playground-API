@@ -5,7 +5,7 @@ import Delays, { delaysModel } from "../models/delays";
 
 // Create a single Delay
 export const createDelays: RequestHandler = async (req: Request, res: Response) => {
-  const newDelay = new Delays({
+  const newDelay = await new Delays({
     code: req.body.code,
     reason: req.body.reason,
     time: req.body.time
