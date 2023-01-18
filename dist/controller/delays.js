@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteDelays = exports.updateDelays = exports.getDelay = exports.getDelays = exports.createDelays = void 0;
 const queryCondition = require('../utils/delayValidation');
 const delays_1 = __importDefault(require("../models/delays"));
-const flights_1 = __importDefault(require("../models/flights"));
 // Create a single Delay
 const createDelays = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const newDelay = new delays_1.default({
@@ -23,26 +22,12 @@ const createDelays = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         reason: req.body.reason,
         time: req.body.time
     });
-    // Validate firstName & lastName to be unique
-    const firstName = req.body.firstName;
-    const lastName = req.body.lastName;
-    delays_1.default.findOne({ firstName: firstName, lastName: lastName }, (err, Delays) => {
-        if (err) {
-            return;
-        }
-        if (delays_1.default) {
-            res.send({ error: 'The delay cannot be added since the delay already exsist in the database' });
-        }
-        else {
-            res.send({ success: 'The delay has been successfully added to the database' });
-        }
-    });
     try {
         const freshDelay = yield newDelay.save();
-        res.status(201).json(freshDelay);
+        res.status(201).send(freshDelay);
     }
     catch (err) {
-        res.status(404).json(`The Delay you're looking for does not exist!`);
+        res.status(404).send(`The Delay you're looking for does not exist!`);
     }
 });
 exports.createDelays = createDelays;
@@ -51,56 +36,56 @@ const getDelays = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let pageSize = req.query.pageSize;
         let pageNumber = req.query.pageNumber;
-        if (typeof pageSize !== 'string') {
+        if (typeof pageSize !== 'number') {
             pageSize = "0";
         }
-        if (typeof pageNumber !== 'string') {
+        if (typeof pageNumber !== 'number') {
             pageNumber = "1";
         }
         const pageSizeValue = parseInt(pageSize, 10) || 0;
         const pageNumberValue = parseInt(pageNumber, 10) || 1;
         const queries = queryCondition(req.query);
-        const Delays = yield delays_1.default
+        const allDelays = yield delays_1.default
             .find(queries)
             .limit(pageSizeValue)
             .skip((pageNumberValue - 1) * pageSizeValue);
-        res.status(200).json(Delays);
+        res.status(200).send(allDelays);
     }
     catch (err) {
-        res.status(404).json({ message: "The Delay you are looking for does not exist!" });
+        res.status(404).send({ message: "The Delay you are looking for does not exist!" });
     }
 });
 exports.getDelays = getDelays;
-//get a single Delay 
+// Get a single Delay
 const getDelay = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const delayInfo = yield delays_1.default.findById(req.params.id);
-        res.send(delayInfo);
+        const singleDelay = yield delays_1.default.findById(req.params.id);
+        res.send(singleDelay);
     }
     catch (err) {
-        res.status(404).json(`Delay does not exist!`);
+        res.status(404).send(`Delay does not exist!`);
     }
 });
 exports.getDelay = getDelay;
-// update a single Delay
+// Update a single Delay
 const updateDelays = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const updatedRecord = new delays_1.default(req.params.id, req.body);
+        const updatedRecord = yield delays_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true });
         res.send(updatedRecord);
     }
     catch (err) {
-        res.status(500).send(`An error occurred while updating the record`);
+        res.status(500).send({ message: `An error occurred while updating the record` });
     }
 });
 exports.updateDelays = updateDelays;
-// Delete a single Delay 
+// Delete a single Delay
 const deleteDelays = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const delayId = yield flights_1.default.findByIdAndDelete(req.params.id);
-        res.send(`The delay has been deleted has been successfully deleted!`);
+        const delayId = yield delays_1.default.findByIdAndDelete(req.params.id);
+        res.send(`The delay has been deleted successfully!`);
     }
     catch (err) {
-        res.status(404).json(`The Delay you are looking for does not exsist!`);
+        res.status(404).send({ message: `The Delay you are looking for does not exist!` });
     }
 });
 exports.deleteDelays = deleteDelays;

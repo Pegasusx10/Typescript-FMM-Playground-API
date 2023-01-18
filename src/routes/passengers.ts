@@ -13,7 +13,7 @@ router.post("/passengers", createPassengers);
 
 router.get("/passengers", getPassengers);
 
-router.get("/passengers", getPassenger);
+router.get("/passenger/:id", getPassenger);
 
 router.patch("/passenger/:id", updatePassengers);
 

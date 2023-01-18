@@ -1,11 +1,11 @@
 import { RequestHandler } from "express";
-import Flights, { flightsModel } from "../models/flights";
-const queryCondition = require('../utils/flightValidation')
+import Passengers from "../models/passengers";
+const queryCondition = require('../utils/queryLogic')
 
 
-// Create a flight
-export const createFlights: RequestHandler = async (req, res) => {
-  const newFlight = new Flights({
+// Create a Passenger
+export const createPassengers: RequestHandler = async (req, res) => {
+  const newPassengers = new Passengers({
     flightNumber: req.body.flightNumber,
     tailNumber: req.body.tailNumber,
     origin: req.body.origin,
@@ -17,15 +17,15 @@ export const createFlights: RequestHandler = async (req, res) => {
     delay: req.body.delay,
   });
   try {
-    const freshFlights = await newFlight.save() as flightsModel;
-    res.status(201).send(freshFlights);
+    const freshPassengers = await newPassengers.save();
+    res.status(201).send(freshPassengers);
   } catch (err) {
     res.status(404).send({ message: `The Flight you're looking for does not exist!` });
   }
 };
 
-// Get all flights
-export const getFlights: RequestHandler = async (req, res) => {
+// Get all Passengers
+export const getPassengers: RequestHandler = async (req, res) => {
   try {
     let pageSize = req.query.pageSize;
     let pageNumber = req.query.pageNumber;
@@ -38,54 +38,44 @@ export const getFlights: RequestHandler = async (req, res) => {
     const pageSizeValue = parseInt(pageSize, 10) || 0;
     const pageNumberValue = parseInt(pageNumber, 10) || 1;
     const queries = queryCondition(req.query)
-    const flight = Flights
+    const passenger = Passengers
       .find(queries)
       .limit(pageSizeValue)
       .skip((pageNumberValue - 1) * pageSizeValue)
-      .populate('passengers')
-      .populate('delays')
-      res.status(200).send(Flight)
+      // .populate('passengers')
+      // .populate('delays')
+      res.status(200).send(passenger)
     } catch (err) {
       res.status(404).send({ message: "The Flight you are looking for does not exist!" });
     }
   };  
 
-// Get a single flight 
-export const getFlight: RequestHandler = async (req, res) => {
+// Get a single Passenger
+export const getPassenger: RequestHandler = async (req, res) => {
   try{
-    const flight = Flights.findById(req.params.id)
-    .populate('passengers')
-    .populate('delays') as flightsModel;
-    res.status(200).send(flight);
+    const onePassenger = Passengers.findById(req.params.id)
+    // .populate('passengers')
+    // .populate('delays');
+    res.status(200).send(onePassenger);
   } catch (err) {
     res.status(404).send({ message: `The Flight you're looking for does not exist!` });
   }
 };
 
-// endpoint for cancelled Flights
-export const cancelledFlights: RequestHandler = async (req, res) => {
-  try {
-      const flights = Flights.find({ iropStatus: 'CX' });
-      res.json(Flights);
-  } catch (err) {
-      res.status(500).send(`The endpoint URL does not exsist!`);
-  }
-};
-
 // Update flight by ID
-export const updateFlights: RequestHandler = async (req, res) => {
+export const updatePassengers: RequestHandler = async (req, res) => {
   try{
-    const updatedFlight = Flights.findByIdAndUpdate(req.params.id, req.body, {new: true}) as flightsModel;
-    res.status(200).send(updatedFlight);
+    const updatedPassenger = Passengers.findByIdAndUpdate(req.params.id, req.body, {new: true});
+    res.status(200).send(updatedPassenger);
   } catch (err) {
     res.status(500).send({ message: `An error occurred while updating the record` });
   }
 };
 
 // Delete a single Flight
-export const deleteFlights: RequestHandler = async (req, res) => {
+export const deletePassengers: RequestHandler = async (req, res) => {
   try {
-    const flightId = Flights.findByIdAndDelete(req.params.id)
+    const flightId = Passengers.findByIdAndDelete(req.params.id)
     res.send(`The Flight has been deleted from database successfully!`)
   } catch (err) {
     res.status(404).send(`The Flight you're looking for does not exist!`)

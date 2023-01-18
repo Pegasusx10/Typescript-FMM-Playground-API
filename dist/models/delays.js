@@ -38,5 +38,5 @@ const delaysSchema = new mongoose.Schema({
         required: true,
     }
 });
-const delays = mongoose.model("delays", delaysSchema);
-exports.default = delays;
+const Delays = mongoose.model("Delays", delaysSchema);
+exports.default = Delays;

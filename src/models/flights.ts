@@ -82,5 +82,5 @@ const flightsSchema = new mongoose.Schema({
       required: true,
       }],
 });
-const flights: Model<flightsType> = mongoose.model < flightsType > ("flights", flightsSchema);
-export default flights;
+const Flights: Model<flightsType> = mongoose.model < flightsType > ("Flights", flightsSchema);
+export default Flights;

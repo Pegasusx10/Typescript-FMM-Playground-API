@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import flightsRoutes from "./routes/flights";
 import delaysRoutes from "./routes/delays";
 import passengersRoutes from "./routes/passengers";
+// import connection from "./config.ts/dbConnection"
 import { json, urlencoded } from "body-parser";
 const dotenv = require("dotenv")
 dotenv.config();
@@ -14,8 +15,8 @@ app.use(json());
 app.use(urlencoded({ extended: true }));
 
 app.use("/fmm/api", flightsRoutes);
-app.use("/fmm/api/delays", delaysRoutes);
-app.use("/fmm/api/passengers", passengersRoutes);
+app.use("/fmm/api", delaysRoutes);
+app.use("/fmm/api", passengersRoutes);
 
 app.use(
   (

@@ -54,5 +54,5 @@ const passengersSchema = new mongoose.Schema({
   }
 });
 
-const passengers: Model<passengersType> = mongoose.model < passengersType > ("passengers", passengersSchema);
-export default passengers;
+const Passengers: Model<passengersType> = mongoose.model < passengersType > ("Passengers", passengersSchema);
+export default Passengers;

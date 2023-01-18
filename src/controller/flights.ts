@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import Flights, { flightsModel } from "../models/flights";
-const queryCondition = require('../utils/flightValidation')
+const queryCondition = require('../utils/queryLogic')
 
 
 // Create a flight
@@ -17,7 +17,7 @@ export const createFlights: RequestHandler = async (req, res) => {
     delay: req.body.delay,
   });
   try {
-    const freshFlights = await newFlight.save() as flightsModel;
+    const freshFlights = await newFlight.save();
     res.status(201).send(freshFlights);
   } catch (err) {
     res.status(404).send({ message: `The Flight you're looking for does not exist!` });
@@ -42,9 +42,9 @@ export const getFlights: RequestHandler = async (req, res) => {
       .find(queries)
       .limit(pageSizeValue)
       .skip((pageNumberValue - 1) * pageSizeValue)
-      .populate('passengers')
-      .populate('delays')
-      res.status(200).send(Flight)
+      // .populate('passengers')
+      // .populate('delays')
+      res.status(200).send(flight)
     } catch (err) {
       res.status(404).send({ message: "The Flight you are looking for does not exist!" });
     }
@@ -54,8 +54,8 @@ export const getFlights: RequestHandler = async (req, res) => {
 export const getFlight: RequestHandler = async (req, res) => {
   try{
     const flight = Flights.findById(req.params.id)
-    .populate('passengers')
-    .populate('delays') as flightsModel;
+    // .populate('passengers')
+    // .populate('delays');
     res.status(200).send(flight);
   } catch (err) {
     res.status(404).send({ message: `The Flight you're looking for does not exist!` });
@@ -66,7 +66,7 @@ export const getFlight: RequestHandler = async (req, res) => {
 export const cancelledFlights: RequestHandler = async (req, res) => {
   try {
       const flights = Flights.find({ iropStatus: 'CX' });
-      res.json(Flights);
+      res.json(flights);
   } catch (err) {
       res.status(500).send(`The endpoint URL does not exsist!`);
   }
@@ -75,7 +75,7 @@ export const cancelledFlights: RequestHandler = async (req, res) => {
 // Update flight by ID
 export const updateFlights: RequestHandler = async (req, res) => {
   try{
-    const updatedFlight = Flights.findByIdAndUpdate(req.params.id, req.body, {new: true}) as flightsModel;
+    const updatedFlight = Flights.findByIdAndUpdate(req.params.id, req.body, {new: true});
     res.status(200).send(updatedFlight);
   } catch (err) {
     res.status(500).send({ message: `An error occurred while updating the record` });

@@ -49,18 +49,20 @@ const flightsSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    passengers: {
-        type: Number,
-        required: true,
-    },
+    passengers: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'passengers',
+            required: true,
+        }],
     hasBusinessClass: {
         type: Boolean,
         required: true,
     },
-    delay: {
-        type: Number,
-        required: true,
-    },
+    delay: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'delays',
+            required: true,
+        }],
 });
-const flights = mongoose.model("flights", flightsSchema);
-exports.default = flights;
+const Flights = mongoose.model("Flights", flightsSchema);
+exports.default = Flights;

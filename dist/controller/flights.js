@@ -30,10 +30,10 @@ const createFlights = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     });
     try {
         const freshFlights = yield newFlight.save();
-        res.status(201).json(freshFlights);
+        res.status(201).send(freshFlights);
     }
     catch (err) {
-        res.status(404).json(`The Flight you're looking for does not exist!`);
+        res.status(404).send({ message: `The Flight you're looking for does not exist!` });
     }
 });
 exports.createFlights = createFlights;
@@ -45,65 +45,70 @@ const getFlights = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         if (typeof pageSize !== 'string') {
             pageSize = "0";
         }
+        ;
         if (typeof pageNumber !== 'string') {
             pageNumber = "1";
         }
+        ;
         const pageSizeValue = parseInt(pageSize, 10) || 0;
         const pageNumberValue = parseInt(pageNumber, 10) || 1;
         const queries = queryCondition(req.query);
-        const Flight = yield flights_1.default
+        const flight = flights_1.default
             .find(queries)
             .limit(pageSizeValue)
             .skip((pageNumberValue - 1) * pageSizeValue);
-        res.status(200).json(Flight);
+        // .populate('passengers')
+        // .populate('delays')
+        res.status(200).send(flight);
     }
     catch (err) {
-        res.status(404).json({ message: "The Flight you are looking for does not exist!" });
+        res.status(404).send({ message: "The Flight you are looking for does not exist!" });
     }
 });
 exports.getFlights = getFlights;
 // Get a single flight 
 const getFlight = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const Flights = yield flights_1.default.findById(req.params.id);
+        const flight = flights_1.default.findById(req.params.id);
         // .populate('passengers')
-        res.send(Flights);
+        // .populate('delays');
+        res.status(200).send(flight);
     }
     catch (err) {
-        res.status(404).json(`The Flight you're looking for does not exist!`);
+        res.status(404).send({ message: `The Flight you're looking for does not exist!` });
     }
 });
 exports.getFlight = getFlight;
 // endpoint for cancelled Flights
 const cancelledFlights = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const Flights = yield flights_1.default.find({ iropStatus: 'CX' });
-        res.json(Flights);
+        const flights = flights_1.default.find({ iropStatus: 'CX' });
+        res.json(flights);
     }
     catch (err) {
-        res.status(500).json(`The endpoint URL does not exsist!`);
+        res.status(500).send(`The endpoint URL does not exsist!`);
     }
 });
 exports.cancelledFlights = cancelledFlights;
 // Update flight by ID
 const updateFlights = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const updatedflights = new flights_1.default(req.params.id, req.body);
-        res.send(updatedflights);
+        const updatedFlight = flights_1.default.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.status(200).send(updatedFlight);
     }
     catch (err) {
-        res.status(500).send(`An error occurred while updating the record`);
+        res.status(500).send({ message: `An error occurred while updating the record` });
     }
 });
 exports.updateFlights = updateFlights;
 // Delete a single Flight
 const deleteFlights = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const flightId = yield flights_1.default.findByIdAndDelete(req.params.id);
+        const flightId = flights_1.default.findByIdAndDelete(req.params.id);
         res.send(`The Flight has been deleted from database successfully!`);
     }
     catch (err) {
-        res.status(404).json(`The Flight you're looking for does not exist!`);
+        res.status(404).send(`The Flight you're looking for does not exist!`);
     }
 });
 exports.deleteFlights = deleteFlights;
