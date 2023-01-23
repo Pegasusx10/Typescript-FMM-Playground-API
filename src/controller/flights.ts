@@ -1,10 +1,10 @@
-import { RequestHandler } from "express";
-import Flights, { flightsModel } from "../models/flights";
-const queryCondition = require('../utils/queryLogic')
-
+import { RequestHandler, Request, Response } from "express";
+import Flights, { FlightsModel } from "../models/flights";
+import queryCondition from '../utils/query';
+import { handleError, handleNotFoundError, handleUpdateError } from "../middleware/errorHandler";
 
 // Create a flight
-export const createFlights: RequestHandler = async (req, res) => {
+export const createFlights: RequestHandler = async (req: Request, res: Response) => {
   const newFlight = new Flights({
     flightNumber: req.body.flightNumber,
     tailNumber: req.body.tailNumber,
@@ -18,14 +18,14 @@ export const createFlights: RequestHandler = async (req, res) => {
   });
   try {
     const freshFlights = await newFlight.save();
-    res.status(201).send(freshFlights);
+    res.status(201).json(freshFlights);
   } catch (err) {
-    res.status(404).send({ message: `The Flight you're looking for does not exist!` });
+    handleError
   }
 };
 
 // Get all flights
-export const getFlights: RequestHandler = async (req, res) => {
+export const getFlights: RequestHandler = async (req: Request, res: Response) => {
   try {
     let pageSize = req.query.pageSize;
     let pageNumber = req.query.pageNumber;
@@ -38,57 +38,55 @@ export const getFlights: RequestHandler = async (req, res) => {
     const pageSizeValue = parseInt(pageSize, 10) || 0;
     const pageNumberValue = parseInt(pageNumber, 10) || 1;
     const queries = queryCondition(req.query)
-    const flight = Flights
+    const flight = await Flights
       .find(queries)
       .limit(pageSizeValue)
       .skip((pageNumberValue - 1) * pageSizeValue)
-      // .populate('passengers')
-      // .populate('delays')
-      res.status(200).send(flight)
+      .populate('passengers')
+      // .populate('Delays')
+      res.status(200).json(flight)
     } catch (err) {
-      res.status(404).send({ message: "The Flight you are looking for does not exist!" });
+      handleError
     }
   };  
 
 // Get a single flight 
-export const getFlight: RequestHandler = async (req, res) => {
+export const getFlight: RequestHandler = async (req: Request, res: Response) => {
   try{
-    const flight = Flights.findById(req.params.id)
-    // .populate('passengers')
-    // .populate('delays');
-    res.status(200).send(flight);
+    const flight = await Flights.findById(req.params.id)
+    .populate('passengers')
+    // .populate('Delays');
+    res.status(200).json(flight);
   } catch (err) {
-    res.status(404).send({ message: `The Flight you're looking for does not exist!` });
-  }
-};
-
-// endpoint for cancelled Flights
-export const cancelledFlights: RequestHandler = async (req, res) => {
-  try {
-      const flights = Flights.find({ iropStatus: 'CX' });
-      res.json(flights);
-  } catch (err) {
-      res.status(500).send(`The endpoint URL does not exsist!`);
+    handleError
   }
 };
 
 // Update flight by ID
-export const updateFlights: RequestHandler = async (req, res) => {
+export const updateFlights: RequestHandler = async (req: Request, res: Response) => {
   try{
-    const updatedFlight = Flights.findByIdAndUpdate(req.params.id, req.body, {new: true});
-    res.status(200).send(updatedFlight);
+    const updatedFlight = await Flights.findByIdAndUpdate(req.params.id, req.body, {new: true});
+    res.json(updatedFlight);
   } catch (err) {
-    res.status(500).send({ message: `An error occurred while updating the record` });
+    handleUpdateError
   }
 };
 
 // Delete a single Flight
-export const deleteFlights: RequestHandler = async (req, res) => {
+export const deleteFlights: RequestHandler = async (req: Request, res: Response) => {
   try {
-    const flightId = Flights.findByIdAndDelete(req.params.id)
-    res.send(`The Flight has been deleted from database successfully!`)
+    const flightId = await Flights.findByIdAndDelete(req.params.id)
+    res.json(`The Flight has been deleted from database successfully!`)
   } catch (err) {
-    res.status(404).send(`The Flight you're looking for does not exist!`)
+    handleNotFoundError
   }
 };
 
+// endpoint for cancelled Flights
+export const cancelledFlights: RequestHandler = async (req: Request, res: Response) => {
+    try {
+        const flights = Flights.find({ iropStatus: 'CX' });
+        res.json(flights);
+    } catch (err) {
+      handleNotFoundError
+    }
