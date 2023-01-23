@@ -18,7 +18,7 @@ router.get("/flight/:id", getFlight);
 
 router.get("/flights/show_cancelled", cancelledFlights);
 
-router.patch("/flight/:id", updateFlights);
+router.put("/flight/:id", updateFlights);
 
 router.delete("/flight/:id", deleteFlights);
 
