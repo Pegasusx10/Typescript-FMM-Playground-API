@@ -1,14 +1,14 @@
 import * as mongoose from "mongoose";
 import { Model } from "mongoose";
 
-type flightsType = flightsModel & mongoose.Document;
-export interface flightsModel {
+type flightsType = FlightsModel & mongoose.Document;
+export interface FlightsModel {
     flightNumber: {
-    type: Number,
+    type: number,
     required: true,
   };
     tailNumber: {
-    type: String,
+    type: string,
     required: true,
   };
     destination: {
@@ -24,12 +24,12 @@ export interface flightsModel {
     required: true,
   };
     totalSeats: {
-    type: Number,
+    type: number,
     required: true,
   };
     passengers: [{
       type:  mongoose.Schema.Types.ObjectId,
-      ref: 'passengers',
+      ref: 'Passengers',
       required: true,
     }];
     hasBusinessClass: {
@@ -38,7 +38,7 @@ export interface flightsModel {
   };
     delay: [{
     type:  mongoose.Schema.Types.ObjectId,
-    ref: 'delays',
+    ref: 'Delays',
     required: true,
     }];
 }
@@ -71,6 +71,7 @@ const flightsSchema = new mongoose.Schema({
         type:  mongoose.Schema.Types.ObjectId,
         ref: 'passengers',
         required: true,
+        unique: true
       }],
         hasBusinessClass: {
         type: Boolean,
@@ -78,9 +79,9 @@ const flightsSchema = new mongoose.Schema({
       },
       delay: [{
       type:  mongoose.Schema.Types.ObjectId,
-      ref: 'delays',
+      ref: 'Delays',
       required: true,
       }],
 });
-const Flights: Model<flightsType> = mongoose.model < flightsType > ("Flights", flightsSchema);
-export default Flights;
+const flights: Model<flightsType> = mongoose.model < flightsType > ("flights", flightsSchema);
+export default flights;
