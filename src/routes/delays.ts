@@ -15,7 +15,7 @@ router.get("/delays", getDelays);
 
 router.get("/delay/:id", getDelay);
 
-router.patch("/delay/:id", updateDelays);
+router.put("/delay/:id", updateDelays);
 
 router.delete("/delay/:id", deleteDelays);
 
