@@ -15,7 +15,7 @@ router.get("/passengers", getPassengers);
 
 router.get("/passenger/:id", getPassenger);
 
-router.patch("/passenger/:id", updatePassengers);
+router.put("/passenger/:id", updatePassengers);
 
 router.delete("/passenger/:id", deletePassengers);
 
