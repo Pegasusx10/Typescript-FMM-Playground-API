@@ -8,7 +8,7 @@ export interface passengersModel {
     required: true,
   };
     lastName: {
-    type: String,
+    type: string,
     required: true,
   };
     age: {
@@ -16,7 +16,7 @@ export interface passengersModel {
     required: true,
   };
     passportNo: {
-    type: Number,
+    type: string,
     required: true,
   };
     country: {
@@ -45,7 +45,7 @@ const passengersSchema = new mongoose.Schema({
       }
   },
   passportNo: {
-      type: Number,
+      type: String,
       required: true,
   },
   country: {
@@ -54,5 +54,5 @@ const passengersSchema = new mongoose.Schema({
   }
 });
 
-const Passengers: Model<passengersType> = mongoose.model < passengersType > ("Passengers", passengersSchema);
-export default Passengers;
+const passengers: Model<passengersType> = mongoose.model < passengersType > ("passengers", passengersSchema);
+export default passengers;
