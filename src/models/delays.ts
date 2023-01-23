@@ -4,15 +4,15 @@ import { Model } from "mongoose";
 type delaysType = delaysModel & mongoose.Document;
 export interface delaysModel {
   code: {
-    type: Number,
+    type: number,
     required: true,
   };
   reason: {
-    type: String,
+    type: string,
     required: true,
   };
   time: {
-    type: Number,
+    type: number,
     required: true,
   }
 }
@@ -30,5 +30,7 @@ const delaysSchema = new mongoose.Schema({
     required: true,
   }
 });
-const Delays: Model<delaysType> = mongoose.model < delaysType > ("Delays", delaysSchema);
+
+
+const Delays: Model<delaysType> = mongoose.model < delaysType > ("delays", delaysSchema);
 export default Delays;
